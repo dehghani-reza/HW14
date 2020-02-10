@@ -25,7 +25,7 @@ public class Account {
 
     private Long accountBalance;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "customerId")
     private Customer customer;
 

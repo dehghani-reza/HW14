@@ -24,11 +24,13 @@ public class CreditCard {
 
     private Long cardNumber;
 
-    private String firstPassword;
+    private Long firstPassword;
 
     private boolean isSuspended;
 
-    @OneToOne
+    private int wrongPassCounter;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "cardPasswordInfoId")
     private CardPasswordInfo cardPasswordInfo;
 

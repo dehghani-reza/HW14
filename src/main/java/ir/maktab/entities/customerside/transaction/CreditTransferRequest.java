@@ -18,17 +18,16 @@ import javax.persistence.*;
 public class CreditTransferRequest extends AccountTransaction {
 
     @ManyToOne
-    @JoinColumn(name ="creditCardId")
+    @JoinColumn(name ="cardNumber")
     private CreditCard sourceCard;
 
     @ManyToOne
-    @JoinColumn(name ="creditCardId" , insertable = false , updatable = false)
+    @JoinColumn(name ="creditCardId")
     private CreditCard destinationCardId;
 
     private Long transferAmount;
 
     private String description;
-
 
     @ManyToOne
     @JoinColumn(name = "accountId")

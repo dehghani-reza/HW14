@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -21,9 +22,9 @@ public class CardPasswordInfo {
 
     private int cvv2;
 
-    private Date expirationDate;
+    private LocalDate expirationDate;
 
-    private String secondPassword;
+    private Long secondPassword;
 
     @OneToOne(mappedBy = "cardPasswordInfo")
     private CreditCard creditCard;
@@ -33,12 +34,15 @@ public class CardPasswordInfo {
         if (this == o) return true;
         if (!(o instanceof CardPasswordInfo)) return false;
         CardPasswordInfo that = (CardPasswordInfo) o;
-        return getCardPasswordInfoId().equals(that.getCardPasswordInfoId());
+        return getCvv2() == that.getCvv2() &&
+                getExpirationDate().equals(that.getExpirationDate()) &&
+                getSecondPassword().equals(that.getSecondPassword()) &&
+                getCreditCard().equals(that.getCreditCard());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCardPasswordInfoId());
+        return Objects.hash(getCvv2(), getExpirationDate(), getSecondPassword(), getCreditCard());
     }
 
     @Override

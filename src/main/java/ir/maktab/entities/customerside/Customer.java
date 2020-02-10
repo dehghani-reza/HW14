@@ -28,7 +28,7 @@ public class Customer {
     @JoinColumn(name = "addressId")
     private Address address;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer",cascade = CascadeType.PERSIST)
     private List<Account> accountList;
 
     @Override
