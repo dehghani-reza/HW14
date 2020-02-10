@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE hibernate-configuration SYSTEM "http://www.hibernate.org/xsd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password"></property>
+        <property name="hibernate.connection.url">
+            jdbc:mysql://localhost/bank?createDatabaseIfNotExist=true
+        </property>
+        <property name="hibernate.connection.driver_class">
+            com.mysql.cj.jdbc.Driver
+        </property>
+        <property name="hibernate.dialect">
+            org.hibernate.dialect.MySQL57Dialect
+        </property>
+        <property name="show_sql">true</property> <!-- showing sql query by hibernate -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <!-- Mapping -->
+        <mapping class="ir.maktab.entities.Address" />
+        <mapping class="ir.maktab.entities.bankside.BankBranch" />
+        <mapping class="ir.maktab.entities.bankside.BankBranchManager" />
+        <mapping class="ir.maktab.entities.bankside.BankEmployee" />
+        <mapping class="ir.maktab.entities.customerside.Customer" />
+        <mapping class="ir.maktab.entities.customerside.Account" />
+        <mapping class="ir.maktab.entities.customerside.card.CreditCard" />
+        <mapping class="ir.maktab.entities.customerside.card.CardPasswordInfo" />
+        <mapping class="ir.maktab.entities.customerside.transaction.AccountTransaction" />
+        <mapping class="ir.maktab.entities.customerside.transaction.CreditTransferRequest" />
+
+
+    </session-factory>
+</hibernate-configuration>
