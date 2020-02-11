@@ -29,8 +29,7 @@ public class Account {
     @JoinColumn(name = "customerId")
     private Customer customer;
 
-    @OneToOne
-    @JoinColumn(name = "creditCardId")
+    @OneToOne(mappedBy = "account")
     private CreditCard creditCard;
 
     @ManyToOne

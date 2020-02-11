@@ -29,6 +29,7 @@ public class AccountService {
         Account account = accountDao.loadById(accountId);
         Long accountBalance = account.getAccountBalance();
         accountBalance+=amount;
+        account.setAccountBalance(accountBalance);
         accountDao.update(account);
         return accountBalance;
     }
@@ -40,6 +41,7 @@ public class AccountService {
             throw new Exception("you're account balance is low");
         }
         accountBalance-=amount;
+        account.setAccountBalance(accountBalance);
         accountDao.update(account);
         return accountBalance;
     }

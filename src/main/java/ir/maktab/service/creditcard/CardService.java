@@ -32,10 +32,10 @@ public class CardService {
         return creditCardDao.save(creditCard);
     }
 
-    public CreditCard updateFirstPass(Long cardId, Long firstPass) throws Exception {
+    public CreditCard updateFirstPass(Long cardId, Long oldFirstPass, Long newFirstPass) throws Exception {
         CreditCard creditCard = creditCardDao.loadById(cardId);
-        validateFirstPass(creditCard, firstPass);
-        creditCard.setFirstPassword(firstPass);
+        validateFirstPass(creditCard, oldFirstPass);
+        creditCard.setFirstPassword(newFirstPass);
         return creditCardDao.update(creditCard);
     }
 
@@ -58,22 +58,22 @@ public class CardService {
         Long amountSource = sourceCreditCard.getAccount().getAccountBalance();
 
         if (sourceCreditCard.isSuspended()) throw new Exception("you'r card not valid");
-
+        cardPasswordInfo.setCreditCard(sourceCreditCard);
         if (!sourceCreditCard.getCardPasswordInfo().equals(cardPasswordInfo)) {
             int wrongPassCounter = sourceCreditCard.getWrongPassCounter();
-            wrongPassCounter+=1;
+            wrongPassCounter += 1;
             sourceCreditCard.setWrongPassCounter(wrongPassCounter);
             creditCardDao.update(sourceCreditCard);
             throw new Exception("wrong card password information");
         }
 
-        if (amountSource < (amount+500)) {
+        if (amountSource < (amount + 500)) {
             throw new Exception("you'r balance is low");
         }
         CreditCard destinationCreditCard = creditCardDao.loadById(destinationCardId);
         Long destinationAmount = destinationCreditCard.getAccount().getAccountBalance();
 
-        amountSource -= (amount+500);
+        amountSource -= (amount + 500);
         sourceCreditCard.getAccount().setAccountBalance(amountSource);
 
         destinationAmount += amount;
@@ -99,6 +99,19 @@ public class CardService {
             creditCardDao.update(creditCard);
             throw new Exception("password is wrong");
         }
+    }
+
+
+    public void validateCardId(Long cardId) throws Exception {
+        CreditCard creditCard = creditCardDao.loadById(cardId);
+        if (creditCard == null) {
+            throw new Exception("no card with this id registered");
+        }
+    }
+
+    public void preValidateCardTransfer(Long sourceCardId, Long destinationCardId) throws Exception {
+        validateCardId(sourceCardId);
+        validateCardId(destinationCardId);
     }
 
 

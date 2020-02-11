@@ -21,7 +21,6 @@ public class CreditCardDao extends CrudRepository<CreditCard,Long> {
     }
 
     public void updateTransferMoneyDestinationCard(CreditCard secondCreditCard , Session session){
-        session.beginTransaction();
         session.update(secondCreditCard);
         session.getTransaction().commit();
     }

@@ -38,6 +38,10 @@ public class BankBranch {
     @OneToMany(mappedBy = "bankBranch")
     private List<Account> accountList;
 
+    public BankBranch(Address address) {
+        this.address=address;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

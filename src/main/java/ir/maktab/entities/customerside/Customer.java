@@ -31,6 +31,10 @@ public class Customer {
     @OneToMany(mappedBy = "customer",cascade = CascadeType.PERSIST)
     private List<Account> accountList;
 
+    public Customer(Address address) {
+        this.address =address;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

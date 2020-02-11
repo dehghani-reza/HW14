@@ -37,7 +37,7 @@ public class CardPasswordInfo {
         return getCvv2() == that.getCvv2() &&
                 getExpirationDate().equals(that.getExpirationDate()) &&
                 getSecondPassword().equals(that.getSecondPassword()) &&
-                getCreditCard().equals(that.getCreditCard());
+                Objects.equals(getCreditCard(), that.getCreditCard());
     }
 
     @Override

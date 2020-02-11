@@ -19,7 +19,8 @@ public class CreditCard {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long creditCardId;
 
-    @OneToOne(mappedBy = "creditCard")
+    @OneToOne
+    @JoinColumn(name = "accountId" , nullable = false ,unique = true)
     private Account account;
 
     private Long cardNumber;
@@ -30,7 +31,7 @@ public class CreditCard {
 
     private int wrongPassCounter;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cardPasswordInfoId")
     private CardPasswordInfo cardPasswordInfo;
 

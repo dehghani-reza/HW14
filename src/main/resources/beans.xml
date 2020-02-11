@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- bean definitions here -->
+    <!--    customer beans -->
+    <bean id="customer1" class="ir.maktab.entities.customerside.Customer">
+        <property name="name" value="reza"/>
+        <property name="lastName" value="dehghani"/>
+        <constructor-arg ref="address1"/>
+    </bean>
+    <bean id="customer2" class="ir.maktab.entities.customerside.Customer">
+        <property name="name" value="reza"/>
+        <property name="lastName" value="lohrasbi"/>
+        <constructor-arg ref="address3"/>
+    </bean>
+    <bean id="customer3" class="ir.maktab.entities.customerside.Customer">
+        <property name="name" value="farshad"/>
+        <property name="lastName" value="ahmadzade"/>
+        <constructor-arg ref="address4"/>
+    </bean>
+<!--    Accounts-->
+    <bean id="account1" class="ir.maktab.entities.customerside.Account">
+        <property name="bankBranch" ref="branch_pirozi"/>
+        <property name="accountBalance" value="500000"/>
+        <property name="customer" ref="customer1"/>
+    </bean>
+    <bean id="account2" class="ir.maktab.entities.customerside.Account">
+        <property name="bankBranch" ref="branch_pirozi"/>
+        <property name="accountBalance" value="1500000"/>
+        <property name="customer" ref="customer1"/>
+    </bean>
+    <bean id="account3" class="ir.maktab.entities.customerside.Account">
+        <property name="bankBranch" ref="branch_pirozi"/>
+        <property name="accountBalance" value="400000"/>
+        <property name="customer" ref="customer2"/>
+    </bean>
+    <bean id="account4" class="ir.maktab.entities.customerside.Account">
+        <property name="bankBranch" ref="branch_pirozi"/>
+        <property name="accountBalance" value="10000"/>
+        <property name="customer" ref="customer3"/>
+    </bean>
+    <bean id="account5" class="ir.maktab.entities.customerside.Account">
+        <property name="bankBranch" ref="branch_pirozi"/>
+        <property name="accountBalance" value="589000"/>
+        <property name="customer" ref="customer3"/>
+    </bean>
+
+    <!--    bank branch beans-->
+    <bean id="branch_pirozi" class="ir.maktab.entities.bankside.BankBranch">
+        <property name="name" value="piroozi"/>
+        <property name="bankBranchManager" ref="manager1"/>
+        <constructor-arg ref="address2"/>
+    </bean>
+    <bean id="manager1" class="ir.maktab.entities.bankside.BankBranchManager">
+        <property name="name" value="Karim"/>
+        <property name="lastName" value="Karimi"/>
+        <property name="bankBranch" ref="branch_pirozi"/>
+    </bean>
+    <bean id="employee1" class="ir.maktab.entities.bankside.BankEmployee">
+        <property name="name" value="reza"/>
+        <property name="lastName" value="mosavi"/>
+        <property name="bankBranch" ref="branch_pirozi"/>
+        <property name="bankBranchManager" ref="manager1"/>
+    </bean>
+    <bean id="employee2" class="ir.maktab.entities.bankside.BankEmployee">
+        <property name="name" value="mahdi"/>
+        <property name="lastName" value="kamrani"/>
+        <property name="bankBranch" ref="branch_pirozi"/>
+        <property name="bankBranchManager" ref="manager1"/>
+    </bean>
+
+
+<!--    address beans -->
+    <bean id="address1" class="ir.maktab.entities.Address">
+        <property name="street" value="piroozi"/>
+        <property name="alley" value="meqdad"/>
+        <property name="city" value="tehran"/>
+        <property name="postalCode" value="00112333"/>
+    </bean>
+    <bean id="address2" class="ir.maktab.entities.Address">
+        <property name="street" value="piroozi"/>
+        <property name="alley" value="parastar"/>
+        <property name="city" value="tehran"/>
+        <property name="postalCode" value="00112343"/>
+    </bean>
+    <bean id="address3" class="ir.maktab.entities.Address">
+        <property name="street" value="nirohavaii"/>
+        <property name="alley" value="fifth"/>
+        <property name="city" value="tehran"/>
+        <property name="postalCode" value="589663"/>
+    </bean>
+    <bean id="address4" class="ir.maktab.entities.Address">
+        <property name="street" value="tehranPars"/>
+        <property name="alley" value="alavi"/>
+        <property name="city" value="tehran"/>
+        <property name="postalCode" value="5855225"/>
+    </bean>
+</beans>
