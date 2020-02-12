@@ -21,7 +21,7 @@
         <property name="lastName" value="ahmadzade"/>
         <constructor-arg ref="address4"/>
     </bean>
-<!--    Accounts-->
+    <!--    Accounts-->
     <bean id="account1" class="ir.maktab.entities.customerside.Account">
         <property name="bankBranch" ref="branch_pirozi"/>
         <property name="accountBalance" value="500000"/>
@@ -73,7 +73,7 @@
     </bean>
 
 
-<!--    address beans -->
+    <!--    address beans -->
     <bean id="address1" class="ir.maktab.entities.Address">
         <property name="street" value="piroozi"/>
         <property name="alley" value="meqdad"/>
@@ -98,4 +98,20 @@
         <property name="city" value="tehran"/>
         <property name="postalCode" value="5855225"/>
     </bean>
+    <!--logic beans -->
+    <bean id="accountService" class="ir.maktab.service.account.AccountService">
+        <constructor-arg ref="accountDao"/>
+    </bean>
+<!--    -->
+    <bean id="cardService" class="ir.maktab.service.creditcard.CardService">
+        <constructor-arg ref="accountDao"/>
+        <constructor-arg ref="creditCardDao"/>
+    </bean>
+    <bean id="accountDao" class="ir.maktab.repositories.customerside.AccountDao"/>
+    <bean id="creditCardDao" class="ir.maktab.repositories.customerside.card.CreditCardDao"/>
+<!--    -->
+    <bean id="customerService" class="ir.maktab.service.customer.CustomerService">
+        <constructor-arg ref="customerDao"/>
+    </bean>
+    <bean id="customerDao" class="ir.maktab.repositories.customerside.CustomerDao"/>
 </beans>

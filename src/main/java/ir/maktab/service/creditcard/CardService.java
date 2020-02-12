@@ -12,8 +12,13 @@ import java.util.Random;
 
 public class CardService {
 
-    AccountDao accountDao = new AccountDao();
-    CreditCardDao creditCardDao = new CreditCardDao();
+    AccountDao accountDao;
+    CreditCardDao creditCardDao;
+
+    public CardService(AccountDao accountDao, CreditCardDao creditCardDao) {
+        this.accountDao = accountDao;
+        this.creditCardDao = creditCardDao;
+    }
 
     public CreditCard createCard(Long accountId, Long password) {
         CardPasswordInfo cardPasswordInfo = new CardPasswordInfo();

@@ -10,7 +10,11 @@ import java.util.List;
 
 public class AccountService {
 
-    AccountDao accountDao = new AccountDao();
+    AccountDao accountDao;
+
+    public AccountService(AccountDao accountDao) {
+        this.accountDao = accountDao;
+    }
 
     public Account createAccount(BankBranch bankBranch, Customer customer) {
         Account account = new Account();

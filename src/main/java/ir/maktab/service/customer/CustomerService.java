@@ -8,7 +8,11 @@ import java.util.List;
 
 public class CustomerService {
 
-    CustomerDao customerDao = new CustomerDao();
+    CustomerDao customerDao;
+
+    public CustomerService(CustomerDao customerDao) {
+        this.customerDao = customerDao;
+    }
 
     public Customer loadCustomerById(Long customerId){
         return customerDao.loadById(customerId);

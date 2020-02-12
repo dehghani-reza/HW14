@@ -17,5 +17,15 @@ C:/Users/Reza/IdeaProjects/HW14/src/main/resources/hibernate.fg.xml</remarks>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost/bank?createDatabaseIfNotExist=true</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="hibernate.cfg.xml/Hibernate" uuid="8ca2455a-af7f-44ba-bc50-a908edd426e5">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>Hibernate
+
+C:/Users/Reza/IdeaProjects/HW14/src/main/resources/hibernate.cfg.xml</remarks>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost/bank?createDatabaseIfNotExist=true</jdbc-url>
+    </data-source>
   </component>
 </project>

@@ -1,6 +1,7 @@
 package ir.maktab;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ir.maktab.core.hibernate.HibernateUtil;
 import ir.maktab.entities.Address;
 import ir.maktab.entities.bankside.BankBranch;
@@ -14,6 +15,7 @@ import ir.maktab.service.creditcard.CardService;
 import ir.maktab.service.customer.CustomerService;
 import org.hibernate.Session;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.persistence.PersistenceException;
@@ -29,12 +31,13 @@ public class App {
         } catch (PersistenceException e) {
             System.out.println("welcome back");
         }
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("beans.xml");
 
         Scanner scanner = new Scanner(System.in);
         Scanner scannerLong = new Scanner(System.in);
-        AccountService accountService = new AccountService();
-        CardService cardService = new CardService();
-        CustomerService customerService = new CustomerService();
+        AccountService accountService = applicationContext.getBean("accountService", AccountService.class);
+        CardService cardService = applicationContext.getBean("cardService", CardService.class);
+        CustomerService customerService = applicationContext.getBean("customerService", CustomerService.class);
 
         String command = "enter";
         while (!command.equalsIgnoreCase("Exit")) {
@@ -102,7 +105,7 @@ public class App {
                     Long firstPass = scannerLong.nextLong();
                     try {
                         System.out.println(cardService.createCard(accountId, firstPass));
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
                     break;
@@ -133,7 +136,7 @@ public class App {
                     firstPass = scanner.nextLong();
                     secondPassword = scanner.nextLong();
                     try {
-                        System.out.println(cardService.updateSecondPass(cardId,firstPass,secondPassword));
+                        System.out.println(cardService.updateSecondPass(cardId, firstPass, secondPassword));
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -148,7 +151,7 @@ public class App {
         }
 
 
-    }
+    }//end of method main
 
     static void starter() {
         Session session = HibernateUtil.getSession();
