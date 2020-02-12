@@ -101,17 +101,36 @@
     <!--logic beans -->
     <bean id="accountService" class="ir.maktab.service.account.AccountService">
         <constructor-arg ref="accountDao"/>
+        <constructor-arg ref="withdrawRequestTransactionDao"/>
+        <constructor-arg ref="depositRequestTransactionDao"/>
     </bean>
-<!--    -->
+    <!--    -->
     <bean id="cardService" class="ir.maktab.service.creditcard.CardService">
         <constructor-arg ref="accountDao"/>
         <constructor-arg ref="creditCardDao"/>
+        <constructor-arg ref="creditTransferRequestService"/>
     </bean>
     <bean id="accountDao" class="ir.maktab.repositories.customerside.AccountDao"/>
     <bean id="creditCardDao" class="ir.maktab.repositories.customerside.card.CreditCardDao"/>
-<!--    -->
+    <!--    -->
     <bean id="customerService" class="ir.maktab.service.customer.CustomerService">
         <constructor-arg ref="customerDao"/>
     </bean>
     <bean id="customerDao" class="ir.maktab.repositories.customerside.CustomerDao"/>
+
+    <bean id="jasonMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
+
+
+
+
+    <bean id="creditTransferRequestDao"
+          class="ir.maktab.repositories.customerside.transaction.CreditTransferRequestDao"/>
+    <bean id="creditTransferRequestService"
+          class="ir.maktab.service.customer.transaction.CreditTransferRequestService">
+        <constructor-arg ref="creditTransferRequestDao"/>
+    </bean>
+<!--    <bean id="creditTransferRequest" class="ir.maktab.entities.customerside.transaction.CreditTransferRequest"/>-->
+
+    <bean id="withdrawRequestTransactionDao" class="ir.maktab.repositories.customerside.transaction.WithdrawRequestTransactionDao"/>
+    <bean id="depositRequestTransactionDao" class="ir.maktab.repositories.customerside.transaction.DepositRequestTransactionDao"/>
 </beans>

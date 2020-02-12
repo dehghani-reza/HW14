@@ -15,7 +15,7 @@
         <property name="hibernate.dialect">
             org.hibernate.dialect.MySQL57Dialect
         </property>
-        <property name="show_sql">true</property> <!-- showing sql query by hibernate -->
+        <property name="show_sql">false</property> <!-- showing sql query by hibernate -->
         <property name="hibernate.hbm2ddl.auto">update</property>
         <!-- Mapping -->
         <mapping class="ir.maktab.entities.Address" />
@@ -28,6 +28,9 @@
         <mapping class="ir.maktab.entities.customerside.card.CardPasswordInfo" />
         <mapping class="ir.maktab.entities.customerside.transaction.AccountTransaction" />
         <mapping class="ir.maktab.entities.customerside.transaction.CreditTransferRequest" />
+        <mapping class="ir.maktab.entities.customerside.transaction.DepositRequestTransaction" />
+        <mapping class="ir.maktab.entities.customerside.transaction.WithdrawRequestTransaction" />
+
 
 
     </session-factory>

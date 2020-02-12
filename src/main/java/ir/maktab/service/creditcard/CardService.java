@@ -3,8 +3,10 @@ package ir.maktab.service.creditcard;
 import ir.maktab.entities.customerside.Account;
 import ir.maktab.entities.customerside.card.CardPasswordInfo;
 import ir.maktab.entities.customerside.card.CreditCard;
+import ir.maktab.entities.customerside.transaction.CreditTransferRequest;
 import ir.maktab.repositories.customerside.AccountDao;
 import ir.maktab.repositories.customerside.card.CreditCardDao;
+import ir.maktab.service.customer.transaction.CreditTransferRequestService;
 import org.hibernate.Session;
 
 import java.time.LocalDate;
@@ -14,10 +16,12 @@ public class CardService {
 
     AccountDao accountDao;
     CreditCardDao creditCardDao;
+    CreditTransferRequestService creditTransferRequestService;
 
-    public CardService(AccountDao accountDao, CreditCardDao creditCardDao) {
+    public CardService(AccountDao accountDao, CreditCardDao creditCardDao ,  CreditTransferRequestService creditTransferRequestService) {
         this.accountDao = accountDao;
         this.creditCardDao = creditCardDao;
+        this.creditTransferRequestService=creditTransferRequestService;
     }
 
     public CreditCard createCard(Long accountId, Long password) {
@@ -59,24 +63,37 @@ public class CardService {
     }
 
     public void transferMoneyByCard(Long sourceCardId, Long amount, CardPasswordInfo cardPasswordInfo, Long destinationCardId) throws Exception {
+        CreditTransferRequest creditTransferRequest = new CreditTransferRequest();
         CreditCard sourceCreditCard = creditCardDao.loadById(sourceCardId);
         Long amountSource = sourceCreditCard.getAccount().getAccountBalance();
+        transaction(amount,sourceCreditCard.getAccount(),null,"transferMoneyByCard",creditTransferRequest);
 
-        if (sourceCreditCard.isSuspended()) throw new Exception("you'r card not valid");
+        if (sourceCreditCard.isSuspended()){
+            creditTransferRequest.setDescription("you'r card not valid");
+            transactionSave(creditTransferRequest,false);
+            throw new Exception("you'r card not valid");
+        }
+
         cardPasswordInfo.setCreditCard(sourceCreditCard);
         if (!sourceCreditCard.getCardPasswordInfo().equals(cardPasswordInfo)) {
             int wrongPassCounter = sourceCreditCard.getWrongPassCounter();
             wrongPassCounter += 1;
             sourceCreditCard.setWrongPassCounter(wrongPassCounter);
             creditCardDao.update(sourceCreditCard);
+            creditTransferRequest.setDescription("wrong card password information");
+            transactionSave(creditTransferRequest,false);
+            suspendCard(sourceCreditCard);
             throw new Exception("wrong card password information");
         }
 
         if (amountSource < (amount + 500)) {
+            creditTransferRequest.setDescription("you'r balance is low");
+            transactionSave(creditTransferRequest,false);
             throw new Exception("you'r balance is low");
         }
         CreditCard destinationCreditCard = creditCardDao.loadById(destinationCardId);
         Long destinationAmount = destinationCreditCard.getAccount().getAccountBalance();
+        transaction(amount,sourceCreditCard.getAccount(),destinationCreditCard,"transferMoneyByCard",creditTransferRequest);
 
         amountSource -= (amount + 500);
         sourceCreditCard.getAccount().setAccountBalance(amountSource);
@@ -84,9 +101,13 @@ public class CardService {
         destinationAmount += amount;
         destinationCreditCard.getAccount().setAccountBalance(destinationAmount);
 
-        Session session = creditCardDao.updateTransferMoneySourceCard(sourceCreditCard);
-        creditCardDao.updateTransferMoneyDestinationCard(destinationCreditCard, session);
-
+        try{
+            Session session = creditCardDao.updateTransferMoneySourceCard(sourceCreditCard);
+            creditCardDao.updateTransferMoneyDestinationCard(destinationCreditCard, session);
+        }catch (Exception e){
+            transactionSave(creditTransferRequest,false);
+        }
+        transactionSave(creditTransferRequest,true);
     }
 
 
@@ -96,16 +117,20 @@ public class CardService {
         if (!creditCard.getFirstPassword().equals(firstPass)) {
             counter += 1;
             if (counter >= 3) {
-                creditCard.setSuspended(true);
-                creditCardDao.update(creditCard);
-                throw new Exception("you'r card suspended");
+                suspendCard(creditCard);
             }
             creditCard.setWrongPassCounter(counter);
             creditCardDao.update(creditCard);
             throw new Exception("password is wrong");
         }
     }
-
+private void suspendCard(CreditCard creditCard) throws Exception {
+        if(creditCard.getWrongPassCounter()>=3){
+            creditCard.setSuspended(true);
+            creditCardDao.save(creditCard);
+            throw new Exception("your card has been suspended");
+        }
+}
 
     public void validateCardId(Long cardId) throws Exception {
         CreditCard creditCard = creditCardDao.loadById(cardId);
@@ -119,5 +144,17 @@ public class CardService {
         validateCardId(destinationCardId);
     }
 
+    public void transaction(Long amount, Account account, CreditCard destinationCard, String description,CreditTransferRequest creditTransferRequest){
+        creditTransferRequest.setTransferAmount(amount);
+        creditTransferRequest.setOriginAccount(account);
+        creditTransferRequest.setDestinationCardId(destinationCard);
+        creditTransferRequest.setDescription(description);
+        creditTransferRequest.setTransactionDate(LocalDate.now());
+    }
+
+    public  void  transactionSave(CreditTransferRequest creditTransferRequest , boolean isTransactionSuccessfullyDone){
+        creditTransferRequest.setSuccessfullyDone(isTransactionSuccessfullyDone);
+        creditTransferRequestService.saveCreditTransferRequestTransaction(creditTransferRequest);
+    }
 
 }

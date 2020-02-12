@@ -10,20 +10,23 @@ import ir.maktab.entities.bankside.BankEmployee;
 import ir.maktab.entities.customerside.Account;
 import ir.maktab.entities.customerside.Customer;
 import ir.maktab.entities.customerside.card.CardPasswordInfo;
+import ir.maktab.entities.customerside.transaction.AccountTransaction;
 import ir.maktab.service.account.AccountService;
 import ir.maktab.service.creditcard.CardService;
 import ir.maktab.service.customer.CustomerService;
 import org.hibernate.Session;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.persistence.PersistenceException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
 public class App {
+    static ApplicationContext applicationContext = new ClassPathXmlApplicationContext("beans.xml");
+    static ObjectMapper jasonMapper = applicationContext.getBean("jasonMapper", ObjectMapper.class);
     public static void main(String[] args) throws InterruptedException {
         try {
             starter();
@@ -31,7 +34,7 @@ public class App {
         } catch (PersistenceException e) {
             System.out.println("welcome back");
         }
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("beans.xml");
+
 
         Scanner scanner = new Scanner(System.in);
         Scanner scannerLong = new Scanner(System.in);
@@ -39,20 +42,23 @@ public class App {
         CardService cardService = applicationContext.getBean("cardService", CardService.class);
         CustomerService customerService = applicationContext.getBean("customerService", CustomerService.class);
 
+
         String command = "enter";
         while (!command.equalsIgnoreCase("Exit")) {
-            System.out.println("here is your services: \n1) withdraw \t2) Deposit \t3) transfer with card \t4) balance check " +
+            System.out.println("here is your services:" +
+                    " \n1) withdraw \t2) Deposit \t3) transfer with card \t4) balance check \t10) transaction \t11) exit " +
                     "\n5) create new account \t6) add card to account \t7) change first pass \t8) change second pass \t9) load all account");
             command = scanner.nextLine();
             command = command.toLowerCase();
             command = command.replaceAll("\\s+", "");
             switch (command) {
                 case "withdraw":
-                    System.out.println("enter amount and accountId");
+                    System.out.println("enter amount and accountId and your firstPass");
                     Long amount = scannerLong.nextLong();
                     Long accountId = scannerLong.nextLong();
+                    Long pass = scannerLong.nextLong();
                     try {
-                        System.out.println(accountService.withdrawFromAccountBalance(amount, accountId));
+                        System.out.println(accountService.withdrawFromAccountBalance(amount, accountId,pass));
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -82,7 +88,7 @@ public class App {
                     LocalDate exDate = null;
                     String expirationDate = scanner.nextLine();
                     try {
-                        exDate = stringToDate(expirationDate);
+                        exDate = stringToJasonDate(expirationDate);
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                         break;
@@ -147,6 +153,22 @@ public class App {
                     List<Account> accountList = customerService.loadCustomerAccounts(customerId);
                     accountList.forEach(System.out::println);
                     break;
+                case "transaction":
+                    System.out.println("please write your start date(yyyy/mm/dd) and account id and pass:");
+                    String date = scanner.nextLine();
+                    accountId = scannerLong.nextLong();
+                    pass = scannerLong.nextLong();
+                    LocalDate date1=null;
+                    try {
+                        date1 = stringToJasonDate(date);
+                        List<AccountTransaction> accountTransactions = accountService.transactionList(date1, pass, accountId);
+                        accountTransactions.forEach(System.out::println);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        e.printStackTrace();
+                        break;
+                    }
+                    break;
             }
         }
 
@@ -177,7 +199,8 @@ public class App {
 
     }
 
-    static LocalDate stringToDate(String date) throws Exception {
+    static LocalDate stringToJasonDate(String date) throws Exception {
+
         String[] parts = date.split("/");
         if (parts.length != 3) {
             throw new Exception("wrong date format");

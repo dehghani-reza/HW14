@@ -4,6 +4,8 @@ import ir.maktab.entities.bankside.BankBranch;
 import ir.maktab.entities.customerside.card.CreditCard;
 import ir.maktab.entities.customerside.transaction.AccountTransaction;
 import ir.maktab.entities.customerside.transaction.CreditTransferRequest;
+import ir.maktab.entities.customerside.transaction.DepositRequestTransaction;
+import ir.maktab.entities.customerside.transaction.WithdrawRequestTransaction;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,6 +40,12 @@ public class Account {
 
     @OneToMany(mappedBy = "originAccount")
     private List<CreditTransferRequest> creditTransferRequestList;
+
+    @OneToMany(mappedBy = "originAccount")
+    private List<WithdrawRequestTransaction> withdrawRequestTransactionList;
+
+    @OneToMany(mappedBy = "originAccount")
+    private List<DepositRequestTransaction> depositRequestTransactionList;
 
     @Override
     public boolean equals(Object o) {

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -22,7 +23,7 @@ public class AccountTransaction {
 
     private boolean isSuccessfullyDone;
 
-    private Date transactionDate;
+    private LocalDate transactionDate;
 
     @Override
     public boolean equals(Object o) {
